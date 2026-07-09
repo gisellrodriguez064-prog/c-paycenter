@@ -1,0 +1,15 @@
+HTTrack3.49-2+htsswf+htsjava launched on Thu, 09 Jul 2026 18:12:50 at https://a-paycenter.onrender.com/ +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar
+(winhttrack -qYC2%Ps2u1%s%uN0%I0p3DaK0H0%kf2A25000%f#f -F "Mozilla/4.5 (compatible; HTTrack 3.0x; Windows 98)" -%F "<!-- Mirrored from %s%s by HTTrack Website Copier/3.x [XR&CO'2014], %s -->" -%l "en, *" -Y https://a-paycenter.onrender.com/ -O1 "C:\My Web Sites\ava1" +*.png +*.gif +*.jpg +*.jpeg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+18:12:54	Warning: 	Found for https://cdn.tailwindcss.com/
+18:12:54	Warning: 	File has moved from https://cdn.tailwindcss.com/ to /3.4.17
+18:12:55	Error: 	"Not Found" (404) at link https://fonts.googleapis.com/ (from https://a-paycenter.onrender.com/)
+18:12:55	Error: 	"Not Found" (404) at link https://fonts.gstatic.com/ (from https://a-paycenter.onrender.com/)
+
+HTTrack Website Copier/3.49-2 mirror complete in 7 seconds : 18 links scanned, 11 files written (2487293 bytes overall) [1054143 bytes received at 150591 bytes/sec], 2488067 bytes transferred using HTTP compression in 13 files, ratio 41%, 1.1 requests per connection
+(2 errors, 2 warnings, 0 messages)
