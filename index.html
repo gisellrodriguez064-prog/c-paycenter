@@ -1,0 +1,661 @@
+<head>
+  <meta charset="UTF-8" />
+  <title>AvalPay Center – Paga tus servicios y obligaciones de forma segura</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#001635" />
+
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com/"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue:    "#0b7dbb", // Primary Blue AvalPay
+              lightBlue: "#5dbaeb", // Secondary Blue AvalPay
+              navy:    "#001635", // Dark Navy AvalPay
+              red:     "#e1081e", // Aval Red
+              text:    "#314b70", // Dark Blue for text
+              gray:    "#f4f4f4", // Light background for cards
+            }
+          },
+          boxShadow: {
+            soft: "0 10px 40px rgba(0,0,0,0.08)"
+          },
+          borderRadius: {
+            "3xl": "1.75rem"
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .animate-marquee { animation: marquee 22s linear infinite; }
+
+    /* Textura AvalPay suave */
+    .topo:before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.05;
+      z-index:0;
+      background:
+        radial-gradient(1000px circle at 18% 12%, rgba(11,125,187,.1), transparent 56%),
+        radial-gradient(900px circle at 86% 18%, rgba(225,8,30,.05), transparent 60%),
+        repeating-linear-gradient(0deg, rgba(0,0,0,.01) 0, rgba(0,0,0,.01) 1px, transparent 1px, transparent 22px),
+        repeating-linear-gradient(90deg, rgba(0,0,0,.01) 0, rgba(0,0,0,.01) 1px, transparent 1px, transparent 28px);
+    }
+
+    .shine {
+      background-size: 200% 200%;
+      animation: shineMove 10s ease-in-out infinite;
+    }
+    @keyframes shineMove {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+  </style>
+</head>
+
+<body class="topo bg-white text-brand-text">
+
+  <!-- Cookies -->
+  <div
+    id="cookieModal"
+    class="fixed inset-0 z-60 flex items-end sm:items-center justify-center bg-brand-navy/40 backdrop-blur-sm px-4 py-6"
+    style="z-index: 33;"
+  >
+    <div class="w-full max-w-md rounded-3xl bg-white p-4 sm:p-5 shadow-soft ring-1 ring-slate-200">
+      <div class="flex items-start gap-3">
+        <div class="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue ring-1 ring-brand-blue/20">
+          <i data-lucide="cookie" class="w-4 h-4"></i>
+        </div>
+
+        <div class="space-y-2 text-xs text-slate-600">
+          <h2 class="text-sm font-semibold text-brand-navy">
+            Cookies para mejorar tu experiencia
+          </h2>
+          <p>
+            Usamos cookies propias y de terceros para recordar tus preferencias,
+            medir el uso del sitio y optimizar tu solicitud de servicios.
+          </p>
+          <p>
+            Al continuar navegando o pulsar “Aceptar cookies”, autorizas este uso.
+            Para más información revisa nuestra política de privacidad.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+            <button
+              id="cookieAcceptButton"
+              class="inline-flex flex-1 items-center justify-center rounded-2xl bg-brand-blue px-4 py-2 text-xs font-semibold text-white shadow-soft hover:brightness-110 active:brightness-95 transition"
+              type="button"
+            >
+              Aceptar cookies
+            </button>
+
+            <button
+              type="button"
+              data-open-modal="privacidad"
+              class="text-[11px] font-medium text-brand-blue underline underline-offset-2 hover:text-brand-lightBlue transition"
+            >
+              Ver detalles
+            </button>
+          </div>
+
+          <p class="text-[10px] text-slate-400">
+            Puedes ajustar tus cookies en cualquier momento desde tu navegador.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="min-h-screen bg-[radial-gradient(1200px_circle_at_18%_-10%,rgba(93,186,235,0.1),transparent_52%),radial-gradient(950px_circle_at_92%_12%,rgba(225,8,30,0.05),transparent_56%)]">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <div class="flex items-center gap-2">
+          <div class="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-blue/10 text-brand-blue ring-1 ring-brand-blue/15">
+            <i data-lucide="wallet" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="block text-sm font-semibold tracking-tight text-brand-navy">AvalPay Center</span>
+            <span class="block text-[11px] text-slate-500">Portal de pagos del Grupo Aval</span>
+          </div>
+        </div>
+
+        <nav class="hidden items-center gap-6 text-sm text-slate-600 md:flex">
+          <a href="#buscador" class="hover:text-brand-blue transition">Inicio</a>
+          <a href="#ofertas" class="hover:text-brand-blue transition">Servicios</a>
+          <a href="#por-que" class="hover:text-brand-blue transition">Cómo funciona</a>
+          <button
+            data-open-modal="contacto"
+            class="rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-xs font-medium hover:border-brand-blue hover:text-brand-blue transition"
+          >
+            Ayuda
+          </button>
+        </nav>
+
+        <button
+          data-open-modal="contacto"
+          class="inline-flex items-center gap-1.5 rounded-full bg-brand-red px-4 py-1.5 text-xs font-semibold text-white shadow-soft hover:brightness-110 active:brightness-95 transition"
+        >
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          WhatsApp
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero + Search -->
+    <main>
+      <section id="buscador" class="relative">
+        <div class="mx-auto flex max-w-6xl flex-col gap-10 px-4 pb-16 pt-10 lg:flex-row lg:items-center lg:justify-between">
+          <!-- Copy -->
+          <div class="max-w-xl space-y-6">
+            <p class="inline-flex items-center gap-2 rounded-full bg-brand-blue/5 px-3 py-1 text-[11px] font-medium text-brand-blue ring-1 ring-brand-blue/10 backdrop-blur">
+              <span class="inline-flex h-4 w-4 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
+                <i data-lucide="shield-check" class="w-3 h-3"></i>
+              </span>
+              Pagos seguros · Respaldo Grupo Aval · Múltiples convenios
+            </p>
+
+            <h1 class="text-balance text-3xl font-extrabold tracking-tight text-brand-navy sm:text-4xl lg:text-5xl">
+              Tus pagos, <span class="shine bg-gradient-to-r from-brand-blue via-brand-lightBlue to-brand-red bg-clip-text text-transparent">a un clic de distancia</span>.
+            </h1>
+
+            <p class="text-sm leading-relaxed text-slate-600 sm:text-base">
+              Realiza el pago de tus servicios públicos, convenios y obligaciones financieras en un solo lugar con la inmediatez y seguridad que te brinda el Grupo Aval.
+            </p>
+
+            <!-- CTAs -->
+            <div class="mt-4 flex flex-wrap gap-3">
+              <button
+                type="button"
+                data-cta="servicios"
+                class="inline-flex items-center justify-center rounded-2xl bg-brand-red px-5 py-2.5 text-sm font-semibold text-white shadow-soft hover:brightness-110 active:brightness-95 transition"
+              >
+                <i data-lucide="layout-grid" class="w-4 h-4 mr-1"></i>
+                Ver servicios
+              </button>
+              <button
+                type="button"
+                data-cta="cotizar"
+                class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-brand-blue hover:border-brand-blue hover:text-brand-blue transition shadow-sm"
+              >
+                <i data-lucide="calculator" class="w-4 h-4 mr-1"></i>
+                Cotizar ahora
+              </button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 pt-1 text-[11px] text-slate-500">
+              <span class="inline-flex items-center gap-1 rounded-full bg-slate-50 px-3 py-1 ring-1 ring-slate-200">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-brand-blue"></i>
+                Pagos con pasarelas confiables
+              </span>
+              <span class="inline-flex items-center gap-1 rounded-full bg-slate-50 px-3 py-1 ring-1 ring-slate-200">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-brand-blue"></i>
+                Gestión prioritaria
+              </span>
+            </div>
+          </div>
+
+          <!-- Search card -->
+          <div class="w-full max-w-md rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200">
+            <div class="mb-4 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-blue/5 ring-1 ring-brand-blue/10">
+                  <i data-lucide="layout-grid" class="w-4 h-4 text-brand-blue"></i>
+                </span>
+                <div>
+                  <p class="text-xs font-semibold uppercase tracking-[0.14em] text-brand-blue">
+                    ¿Qué quieres pagar hoy?
+                  </p>
+                  <p class="text-sm text-slate-500">
+                    Rápido, fácil y seguro
+                  </p>
+                </div>
+              </div>
+              <span class="rounded-full bg-brand-blue/5 px-3 py-1 text-[11px] font-medium text-brand-blue ring-1 ring-brand-blue/10">
+                Servicio Premium
+              </span>
+            </div>
+
+            <form id="searchForm" class="space-y-4 text-sm">
+              <div>
+                <label for="origen" class="mb-1.5 flex items-center gap-1 text-xs font-semibold text-slate-600">
+                  <i data-lucide="search" class="w-3 h-3 text-brand-blue"></i>
+                  <span>Empresa o Convenio</span>
+                </label>
+                <select id="origen" name="origen" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue/50 transition">
+                  <option value="">Selecciona una opción</option>
+                  <option value="servicios">Servicios Públicos</option>
+                  <option value="educacion">Educación</option>
+                  <option value="impuestos">Impuestos</option>
+                  <option value="financiero">Financiero</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="destino" class="mb-1.5 flex items-center gap-1 text-xs font-semibold text-slate-600">
+                  <i data-lucide="hash" class="w-3 h-3 text-brand-blue"></i>
+                  <span>Referencia de pago</span>
+                </label>
+                <input
+                  id="destino"
+                  name="destino"
+                  type="text"
+                  placeholder="Ingresa la referencia"
+                  class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue/50 transition"
+                />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="min-w-0">
+                  <label for="fecha" class="mb-1.5 flex items-center gap-1 text-xs font-semibold text-slate-600">
+                    <i data-lucide="banknote" class="w-3 h-3 text-brand-blue"></i>
+                    <span>Valor a pagar</span>
+                  </label>
+                  <input
+                    id="fecha"
+                    name="fecha"
+                    type="text"
+                    placeholder="$ 0.00"
+                    class="block w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue/50 transition"
+                  />
+                </div>
+
+                <div class="min-w-0">
+                  <label for="pasajeros" class="mb-1.5 flex items-center gap-1 text-xs font-semibold text-slate-600">
+                    <i data-lucide="credit-card" class="w-3 h-3 text-brand-blue"></i>
+                    <span>Medio de pago</span>
+                  </label>
+
+                  <div class="relative">
+                    <select
+                      id="pasajeros"
+                      name="pasajeros"
+                      class="appearance-none block w-full min-w-0 max-w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-900 focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue/50 pr-8 transition"
+                    >
+                      <option value="pse">Botón PSE</option>
+                      <option value="credit">Tarjeta de Crédito</option>
+                      <option value="aval">Puntos Aval</option>
+                    </select>
+
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
+                      <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+                <button
+                  type="submit"
+                  class="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-brand-navy px-4 py-3 text-sm font-semibold text-white shadow-soft hover:brightness-125 active:brightness-95 transition"
+                >
+                  <span>Pagar ahora</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+
+                <button
+                  type="button"
+                  id="quoteButton"
+                  class="w-full inline-flex items-center justify-center gap-1 rounded-2xl bg-brand-red px-4 py-3 text-sm font-semibold text-white shadow-soft hover:brightness-110 active:brightness-95 transition"
+                >
+                  <i data-lucide="calculator" class="w-4 h-4"></i>
+                  Cotizar
+                </button>
+              </div>
+
+              <p class="pt-1 text-[10px] leading-relaxed text-slate-400 text-center">
+                Servicios sujetos a disponibilidad. Precios referenciales sujetos a cambios.
+              </p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Promo block -->
+      <section class="mx-auto mb-14 max-w-6xl px-4">
+        <div class="grid overflow-hidden rounded-3xl bg-brand-navy text-white shadow-soft md:grid-cols-[1.15fr,1fr] ring-1 ring-brand-navy">
+          <div class="relative flex items-center justify-center bg-gradient-to-br from-brand-navy to-brand-blue px-6 py-6 sm:px-8 sm:py-10">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_left,_rgba(255,255,255,0.05),_transparent_55%)]"></div>
+            <div class="relative text-center md:text-left">
+              <p class="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-brand-lightBlue">
+                Más agilidad para ti
+              </p>
+              <h2 class="text-3xl font-extrabold leading-tight sm:text-4xl">
+                Tu portal de pagos confiable
+              </h2>
+              <p class="mt-3 max-w-md text-sm text-slate-200">
+                Paga tus servicios y obligaciones desde cualquier lugar, de forma rápida y con total seguridad.
+              </p>
+              <p class="mt-4 text-3xl font-extrabold sm:text-4xl">
+                <span class="text-brand-red">Garantía total</span>
+                <span class="ml-1 text-base font-semibold text-slate-300">en cada servicio</span>
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-col justify-between gap-4 bg-brand-navy/90 px-6 py-6 sm:px-8 sm:py-8 backdrop-blur">
+            <ul class="space-y-2 text-sm text-slate-200">
+              <li>• Múltiples medios de pago disponibles.</li>
+              <li>• Confirmación inmediata de tus transacciones.</li>
+              <li>• Respaldo y seguridad del Grupo Aval.</li>
+            </ul>
+            <div class="flex flex-wrap items-center gap-3">
+              <button class="inline-flex items-center justify-center rounded-full bg-brand-lightBlue px-5 py-2.5 text-sm font-semibold text-brand-navy shadow-soft hover:brightness-110 active:brightness-95 transition">
+                Pagar ahora
+                <i data-lucide="credit-card" class="w-4 h-4 ml-1"></i>
+              </button>
+              <button class="inline-flex items-center justify-center rounded-full border border-slate-500 bg-white/10 px-4 py-2 text-xs font-semibold text-white hover:border-brand-lightBlue hover:text-brand-lightBlue transition">
+                Consultar convenios
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Offers -->
+      <section id="ofertas" class="mx-auto max-w-6xl px-4 pb-16">
+        <div class="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <h2 class="text-2xl font-semibold text-brand-navy sm:text-3xl">
+              Servicios destacados
+            </h2>
+            <p class="text-sm text-slate-500">
+              Soluciones integrales con la mejor relación calidad-precio.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <button class="rounded-full bg-brand-blue text-white px-4 py-1.5 ring-1 ring-brand-blue transition">
+              Todos los servicios
+            </button>
+            <button class="rounded-full bg-white text-slate-600 px-4 py-1.5 ring-1 ring-slate-200 hover:ring-brand-blue transition">
+              Hogar
+            </button>
+            <button class="rounded-full bg-white text-slate-600 px-4 py-1.5 ring-1 ring-slate-200 hover:ring-brand-blue transition">
+              Empresa
+            </button>
+          </div>
+        </div>
+
+        <div id="offersGrid" class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
+          <article class="group flex flex-col rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-100 hover:-translate-y-1 hover:ring-brand-blue/30 transition">
+            <div class="mb-3 flex items-center justify-between text-[11px] text-slate-500">
+              <span class="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-1 ring-1 ring-slate-200">
+                <span class="h-1.5 w-1.5 rounded-full bg-brand-blue"></span>
+                Servicios Públicos
+              </span>
+              <span class="rounded-full bg-slate-50 px-2 py-1 text-[10px] text-slate-500 ring-1 ring-slate-200">
+                Agua, Luz, Gas
+              </span>
+            </div>
+
+            <h3 class="text-sm font-semibold text-brand-navy">Pago de Servicios Públicos</h3>
+            <p class="mt-1 text-xs text-slate-500">Paga tus facturas de servicios de forma rápida</p>
+
+            <p class="mt-4 text-2xl font-extrabold tracking-tight text-brand-blue">
+              Efectivo / PSE <span class="text-xs font-medium text-slate-400 align-middle">Garantizado</span>
+            </p>
+
+            <div class="mt-4 flex items-center gap-2">
+              <button class="flex-1 inline-flex items-center justify-center gap-1.5 rounded-2xl bg-brand-red px-4 py-2.5 text-sm font-semibold text-white shadow-soft hover:brightness-110 active:brightness-95 transition">
+                Pagar <i data-lucide="zap" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </article>
+
+          <article class="group flex flex-col rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-100 hover:-translate-y-1 hover:ring-brand-blue/30 transition">
+            <div class="mb-3 flex items-center justify-between text-[11px] text-slate-500">
+              <span class="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-1 ring-1 ring-slate-200">
+                <span class="h-1.5 w-1.5 rounded-full bg-brand-blue"></span>
+                Educación
+              </span>
+              <span class="rounded-full bg-slate-50 px-2 py-1 text-[10px] text-slate-500 ring-1 ring-slate-200">
+                Colegios y Univ.
+              </span>
+            </div>
+
+            <h3 class="text-sm font-semibold text-brand-navy">Matrículas y Pensiones</h3>
+            <p class="mt-1 text-xs text-slate-500">Convenios con instituciones educativas</p>
+
+            <p class="mt-4 text-2xl font-extrabold tracking-tight text-brand-blue">
+              PSE / Tarjeta <span class="text-xs font-medium text-slate-400 align-middle">Seguro</span>
+            </p>
+
+            <div class="mt-4 flex items-center gap-2">
+              <button class="flex-1 inline-flex items-center justify-center gap-1.5 rounded-2xl bg-brand-red px-4 py-2.5 text-sm font-semibold text-white shadow-soft hover:brightness-110 active:brightness-95 transition">
+                Pagar <i data-lucide="book-open" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </article>
+
+          <article class="group flex flex-col rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-100 hover:-translate-y-1 hover:ring-brand-blue/30 transition">
+            <div class="mb-3 flex items-center justify-between text-[11px] text-slate-500">
+              <span class="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-1 ring-1 ring-slate-200">
+                <span class="h-1.5 w-1.5 rounded-full bg-brand-blue"></span>
+                Impuestos
+              </span>
+              <span class="rounded-full bg-slate-50 px-2 py-1 text-[10px] text-slate-500 ring-1 ring-slate-200">
+                Nacional y Local
+              </span>
+            </div>
+
+            <h3 class="text-sm font-semibold text-brand-navy">Tasas e Impuestos</h3>
+            <p class="mt-1 text-xs text-slate-500">Predial, Vehículos y más obligaciones</p>
+
+            <p class="mt-4 text-2xl font-extrabold tracking-tight text-brand-blue">
+              Dian / Alcaldía <span class="text-xs font-medium text-slate-400 align-middle">Oficial</span>
+            </p>
+
+            <div class="mt-4 flex items-center gap-2">
+              <button class="flex-1 inline-flex items-center justify-center gap-1.5 rounded-2xl bg-brand-red px-4 py-2.5 text-sm font-semibold text-white shadow-soft hover:brightness-110 active:brightness-95 transition">
+                Pagar <i data-lucide="file-text" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </article>
+
+          <article class="group flex flex-col rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-100 hover:-translate-y-1 hover:ring-brand-blue/30 transition">
+            <div class="mb-3 flex items-center justify-between text-[11px] text-slate-500">
+              <span class="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-1 ring-1 ring-slate-200">
+                <span class="h-1.5 w-1.5 rounded-full bg-brand-blue"></span>
+                Administraciones
+              </span>
+              <span class="rounded-full bg-slate-50 px-2 py-1 text-[10px] text-slate-500 ring-1 ring-slate-200">
+                Propiedad Horizontal
+              </span>
+            </div>
+
+            <h3 class="text-sm font-semibold text-brand-navy">Pagos de Administración</h3>
+            <p class="mt-1 text-xs text-slate-500">Tu conjunto residencial en un solo lugar</p>
+
+            <p class="mt-4 text-2xl font-extrabold tracking-tight text-brand-blue">
+              Fácil / Rápido <span class="text-xs font-medium text-slate-400 align-middle">Directo</span>
+            </p>
+
+            <div class="mt-4 flex items-center gap-2">
+              <button class="flex-1 inline-flex items-center justify-center gap-1.5 rounded-2xl bg-brand-red px-4 py-2.5 text-sm font-semibold text-white shadow-soft hover:brightness-110 active:brightness-95 transition">
+                Pagar <i data-lucide="building" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </article>
+
+          <article class="group flex flex-col rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-100 hover:-translate-y-1 hover:ring-brand-blue/30 transition">
+            <div class="mb-3 flex items-center justify-between text-[11px] text-slate-500">
+              <span class="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-1 ring-1 ring-slate-200">
+                <span class="h-1.5 w-1.5 rounded-full bg-brand-blue"></span>
+                Seguridad Social
+              </span>
+              <span class="rounded-full bg-slate-50 px-2 py-1 text-[10px] text-slate-500 ring-1 ring-slate-200">
+                Planillas PILA
+              </span>
+            </div>
+
+            <h3 class="text-sm font-semibold text-brand-navy">Aportes a Salud y Pensión</h3>
+            <p class="mt-1 text-xs text-slate-500">Gestión de tus aportes de seguridad social</p>
+
+            <p class="mt-4 text-2xl font-extrabold tracking-tight text-brand-blue">
+              PILA / Aportes <span class="text-xs font-medium text-slate-400 align-middle">Al día</span>
+            </p>
+
+            <div class="mt-4 flex items-center gap-2">
+              <button class="flex-1 inline-flex items-center justify-center gap-1.5 rounded-2xl bg-brand-red px-4 py-2.5 text-sm font-semibold text-white shadow-soft hover:brightness-110 active:brightness-95 transition">
+                Pagar <i data-lucide="users" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </article>
+
+          <article class="group flex flex-col rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-100 hover:-translate-y-1 hover:ring-brand-blue/30 transition">
+            <div class="mb-3 flex items-center justify-between text-[11px] text-slate-500">
+              <span class="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-1 ring-1 ring-slate-200">
+                <span class="h-1.5 w-1.5 rounded-full bg-brand-blue"></span>
+                Financiero
+              </span>
+              <span class="rounded-full bg-slate-50 px-2 py-1 text-[10px] text-slate-500 ring-1 ring-slate-200">
+                Créditos y más
+              </span>
+            </div>
+
+            <h3 class="text-sm font-semibold text-brand-navy">Obligaciones Financieras</h3>
+            <p class="mt-1 text-xs text-slate-500">Pago de cuotas y productos bancarios</p>
+
+            <p class="mt-4 text-2xl font-extrabold tracking-tight text-brand-blue">
+              Bancos / Cuotas <span class="text-xs font-medium text-slate-400 align-middle">Seguro</span>
+            </p>
+
+            <div class="mt-4 flex items-center gap-2">
+              <button class="flex-1 inline-flex items-center justify-center gap-1.5 rounded-2xl bg-brand-red px-4 py-2.5 text-sm font-semibold text-white shadow-soft hover:brightness-110 active:brightness-95 transition">
+                Pagar <i data-lucide="banknote" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- Why -->
+      <section id="por-que" class="mx-auto max-w-6xl px-4 pb-16">
+        <div class="grid gap-10 md:grid-cols-[1.1fr,1fr]">
+          <div>
+            <h2 class="text-2xl font-semibold text-brand-navy sm:text-3xl">
+              ¿Por qué usar AvalPay Center?
+            </h2>
+            <p class="mt-3 text-sm text-slate-600">
+              Simplificamos tus pagos con el respaldo y la seguridad de la red más grande de convenios en Colombia.
+              Tú eliges qué pagar; nosotros garantizamos la transacción.
+            </p>
+
+            <div class="mt-6 grid gap-4 sm:grid-cols-2">
+              <div class="rounded-2xl bg-white p-5 ring-1 ring-slate-100 shadow-sm hover:ring-brand-blue/30 transition">
+                <p class="text-lg text-brand-blue"><i data-lucide="shield-check" class="w-6 h-6"></i></p>
+                <h3 class="mt-2 text-sm font-semibold text-brand-navy">Seguridad Total</h3>
+                <p class="mt-1 text-xs text-slate-500">
+                  Transacciones protegidas con los más altos estándares bancarios.
+                </p>
+              </div>
+
+              <div class="rounded-2xl bg-white p-5 ring-1 ring-slate-100 shadow-sm hover:ring-brand-blue/30 transition">
+                <p class="text-lg text-brand-blue"><i data-lucide="zap" class="w-6 h-6"></i></p>
+                <h3 class="mt-2 text-sm font-semibold text-brand-navy">Pago Inmediato</h3>
+                <p class="mt-1 text-xs text-slate-500">
+                  Tus pagos se procesan en tiempo real con confirmación.
+                </p>
+              </div>
+
+              <div class="rounded-2xl bg-white p-5 ring-1 ring-slate-100 shadow-sm hover:ring-brand-blue/30 transition">
+                <p class="text-lg text-brand-blue"><i data-lucide="award" class="w-6 h-6"></i></p>
+                <h3 class="mt-2 text-sm font-semibold text-brand-navy">Respaldo Grupo Aval</h3>
+                <p class="mt-1 text-xs text-slate-500">
+                  Confianza garantizada por las entidades líderes del país.
+                </p>
+              </div>
+
+              <div class="rounded-2xl bg-white p-5 ring-1 ring-slate-100 shadow-sm hover:ring-brand-blue/30 transition">
+                <p class="text-lg text-brand-blue"><i data-lucide="list" class="w-6 h-6"></i></p>
+                <h3 class="mt-2 text-sm font-semibold text-brand-navy">Miles de Convenios</h3>
+                <p class="mt-1 text-xs text-slate-500">
+                  Acceso a más de 10.000 convenios en todo el país.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-5">
+            <div class="rounded-3xl bg-slate-50 p-6 ring-1 ring-slate-200">
+              <div class="flex items-center justify-between gap-2">
+                <h3 class="text-sm font-semibold text-brand-navy">Términos y condiciones</h3>
+                <button data-open-modal="terminos" class="text-xs font-semibold text-brand-blue hover:underline">
+                  Ver detalle
+                </button>
+              </div>
+              <p class="mt-2 text-[11px] leading-relaxed text-slate-500">
+                El uso de la plataforma se rige por las reglas de AvalPay Center y por las
+                condiciones de cada convenio. Los pagos están sujetos a los términos bancarios.
+              </p>
+            </div>
+
+            <div class="rounded-3xl bg-slate-50 p-6 ring-1 ring-slate-200">
+              <div class="flex items-center justify-between gap-2">
+                <h3 class="text-sm font-semibold text-brand-navy">Política de privacidad</h3>
+                <button data-open-modal="privacidad" class="text-xs font-semibold text-brand-blue hover:underline">
+                  Ver detalle
+                </button>
+              </div>
+              <p class="mt-2 text-[11px] leading-relaxed text-slate-500">
+                Protegemos tu información personal con minimización y seguridad.
+                Solo compartimos lo necesario para procesar tus pagos de forma segura.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-slate-50">
+      <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <p>© 2025 AvalPay Center. Todos los derechos reservados.</p>
+        <div class="flex flex-wrap items-center gap-6">
+          <button data-open-modal="terminos" class="hover:text-brand-blue transition">Términos y condiciones</button>
+          <button data-open-modal="privacidad" class="hover:text-brand-blue transition">Política de privacidad</button>
+          <button data-open-modal="contacto" class="hover:text-brand-blue transition">Contacto</button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal genérico -->
+  <div
+    id="modalOverlay"
+    class="fixed inset-0 z-50 hidden flex items-center justify-center bg-brand-navy/60 px-4 backdrop-blur-sm"
+    aria-hidden="true"
+  >
+    <div class="max-h-[80vh] w-full max-w-2xl overflow-hidden rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-200">
+      <div class="mb-4 flex items-center justify-between gap-4 border-b border-slate-100 pb-3">
+        <h2 id="modalTitle" class="text-base font-semibold text-brand-navy"></h2>
+        <button id="modalClose" class="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600 hover:bg-slate-200 transition">
+          Cerrar
+        </button>
+      </div>
+      <div id="modalContent" class="max-h-[60vh] space-y-3 overflow-y-auto text-xs leading-relaxed text-slate-600"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="assets/js/showModalCookies.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
